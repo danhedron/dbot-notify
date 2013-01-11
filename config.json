@@ -2,7 +2,7 @@
     "endpoint":"http://cdr.xpaw.ru/linux/?raw=1",
     "servers": {
         "freenode": [
-            "#oaosidl"
+            "#steamlug-announce"
         ]
     },
     "refresh": 30000
