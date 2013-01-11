@@ -13,6 +13,29 @@ var notifier = function(dbot) {
         }
     }
 
+    function process_new(data) {
+        var updated = [];
+        var added = [];
+        for(var x = 0; x < data.length; x++) {
+            var found = false;
+            data[x].toString = function() { return this.Name + ' (' + this.AppID + ', ' + this.AppType +')'; };
+            for(var y = 0; y < item_cache.length; y++) {
+                if(item_cache[y].AppID == data[x].AppID) {
+                    found = true;
+                    if(item_cache[y].LastUpdated < data[x].LastUpdated) {
+                        updated.push(data[x]);
+                        item_cache[y] = data[x];
+                    }
+                }
+            }
+            if(found === false) {
+                added.push(data[x]);
+                item_cache.push(data[x]);
+            }
+        }
+        return { 'updated': updated, 'added': added };
+    }
+
     var checkItems = function(notifchange) {
         var endpoint = dbot.config.slugnotifier.endpoint;
         console.log('Checking ' + endpoint);
@@ -24,21 +47,22 @@ var notifier = function(dbot) {
             if(Array.isArray(data)) {
                 if( item_cache.length == 0 ) {
                     announce('Built initial cache with ' + data.length + ' items');
-                    for(var i = 0; i < data.length; i++) {
-                        item_cache.push(data[i].AppID);
-                    }
+                    process_new(data);
                 }  
                 else if( item_cache.length < data.length ) {
-                    var delta = data.length - item_cache.length;
-                    var new_items = [];
-                    for(var i = 0; i < data.length; i++) {
-                        console.log(data[i].AppID);
-                        if(item_cache.indexOf(data[i].AppID) == -1) {
-                            new_items.push(data[i].Name + ' (' + data[i].AppID + ')');
-                            item_cache.push(data[i].AppID);
-                        }
+                    var res = process_new(data);
+                    var output = [];
+                    if( res.updated.length > 0 ) {
+                        output.push(res.updated.length);
+                        output.push('updated:');
+                        output.push(res.updated.join(', '));
                     }
-                    announce(new_items.length + ' new items: ' + new_items.join(', '));
+                    if( res.added.length > 0 ) {
+                        output.push(res.added.length);
+                        output.push('added:');
+                        output.push(res.added.join(', '));
+                    }
+                    announce(output.join(' '));
                 }
                 else if(notifchange) {
                     announce('No new items (' + data.length + ' items)');
