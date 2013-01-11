@@ -1,3 +1,9 @@
 {
-    "endpoint":"http://cdr.xpaw.ru/linux/?raw=1"
+    "endpoint":"http://cdr.xpaw.ru/linux/?raw=1",
+    "servers": {
+        "freenode": [
+            "#oaosidl"
+        ]
+    },
+    "refresh": 30000
 }
