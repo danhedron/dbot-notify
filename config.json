@@ -1,9 +1,14 @@
 {
-    "endpoint":"http://cdr.xpaw.ru/linux/?raw=1",
-    "servers": {
-        "freenode": [
-            "#steamlug-announce"
-        ]
-    },
-    "refresh": 30000
+    "watches": [
+        {
+            "type": "cdr",
+            "endpoint":"http://cdr.xpaw.ru/linux/?raw=1",
+            "servers": {
+                "freenode": [
+                    "#oaosidl"
+                ]
+            },
+            "refresh": 30000
+        }
+    ]
 }
