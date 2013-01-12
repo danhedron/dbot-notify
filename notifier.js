@@ -73,14 +73,16 @@ var notifier = function(dbot) {
         return { 'updated': updated, 'added': added };
     }
 
-    var checkItems = function(thing, no_changes) {
+    function poll(thing, no_changes) {
         var endpoint = thing.endpoint;
         var handler = protocols[thing.type];
-        console.log('Checking ' + endpoint);
+        var ua = dbot.config.name + ' BOT notify module';
+        console.log('Polling ' + endpoint + ' (UA: ' + ua + ')');
         request.get({
             'url': endpoint,
             'headers': {
-                'Host': 'repo.steampowered.com'
+                'Host': 'repo.steampowered.com',
+                'User-Agent': ua
             }
         },
         function(error, response, body) {
@@ -117,22 +119,19 @@ var notifier = function(dbot) {
 
     var watchers = [];
     for(var i = 0; i < dbot.config.notifier.watches.length; i++) {
-        console.log(JSON.stringify(dbot.config.notifier.watches[i]));
-        var thing = dbot.config.notifier.watches[i];
-        console.log('Watching: ' + thing.endpoint);
-        thing.item_cache = [];
-        watchers.push(thing);
-        var tcal = (function() {
-            checkItems(this);
-            dbot.timers.addOnceTimer(this.refresh, tcal );
-        }).bind(thing);
-        tcal();
+        watchers[i] = dbot.config.notifier.watches[i];
+        watchers[i].check = function() {
+            poll(this);
+            dbot.timers.addOnceTimer(this.refresh, this.check.bind(this) );
+        }
+        watchers[i].item_cache = [];
+        watchers[i].check();
     }
 
     var commands = {
         '~checknow': function(event) {
             for(var i = 0; i < watchers.length; i++) {
-                checkItems(watchers[i], true);
+                poll(watchers[i], true);
             }
         },
         '~forcenew': function(event) {

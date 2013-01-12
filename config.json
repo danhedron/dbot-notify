@@ -5,20 +5,20 @@
             "endpoint":"http://cdr.xpaw.ru/linux/?raw=1",
             "servers": {
                 "freenode": [
-                    "#oaosidl"
+                    "#steamlug-announce"
                 ]
             },
-            "refresh": 30000
+            "refresh": 60000
         },
         {
             "type": "repo",
             "endpoint":"http://repo.steampowered.com/steam/archive/precise/",
             "servers": {
                 "freenode": [
-                    "#oaosidl"
+                    "#steamlug-announce"
                 ]
             },
-            "refresh": 30000
+            "refresh": 60000
         }
     ]
 }
