@@ -122,10 +122,10 @@ var notifier = function(dbot) {
         console.log('Watching: ' + thing.endpoint);
         thing.item_cache = [];
         watchers.push(thing);
-        var tcal = function() {
-            checkItems(thing);
-            dbot.timers.addOnceTimer(thing.refresh, tcal );
-        }
+        var tcal = (function() {
+            checkItems(this);
+            dbot.timers.addOnceTimer(this.refresh, tcal );
+        }).bind(thing);
         tcal();
     }
 
