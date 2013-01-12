@@ -9,6 +9,16 @@
                 ]
             },
             "refresh": 30000
+        },
+        {
+            "type": "repo",
+            "endpoint":"http://repo.steampowered.com/steam/archive/precise/",
+            "servers": {
+                "freenode": [
+                    "#oaosidl"
+                ]
+            },
+            "refresh": 30000
         }
     ]
 }

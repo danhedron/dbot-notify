@@ -1,4 +1,5 @@
-var request = require('request');
+var request = require('request'),
+    jsdom = require('jsdom');
 
 var notifier = function(dbot) {
 
@@ -15,6 +16,25 @@ var notifier = function(dbot) {
             },
             'printable': function(data) {
                 return data.Name + ' (' + data.AppID + ', ' + data.AppType +')';
+            }
+        },
+        'repo': {
+            'are_equal': function(a, b) {
+                return a.Name == b.Name;
+            },
+            'is_update': function(db, data) {
+            },
+            'parse': function(body) {
+                var dom = jsdom.jsdom(body, null, null);
+                var hrefs = dom.querySelectorAll('a[href$=deb]');
+                var items = [];
+                for(var i = 0; i < hrefs.length; i++) {
+                    items.push( { 'Name': hrefs[i].getAttribute('href') } );
+                }
+                return items;
+            },
+            'printable': function(data) {
+                return data.Name;
             }
         }
     }
@@ -57,8 +77,11 @@ var notifier = function(dbot) {
         var endpoint = thing.endpoint;
         var handler = protocols[thing.type];
         console.log('Checking ' + endpoint);
-        request.post({
-            'url': endpoint
+        request.get({
+            'url': endpoint,
+            'headers': {
+                'Host': 'repo.steampowered.com'
+            }
         },
         function(error, response, body) {
             var data = handler.parse(body); 
@@ -93,9 +116,9 @@ var notifier = function(dbot) {
     }
 
     var watchers = [];
-    for(var i = 0; i < dbot.config.slugnotifier.watches.length; i++) {
-        console.log(JSON.stringify(dbot.config.slugnotifier.watches[i]));
-        var thing = dbot.config.slugnotifier.watches[i];
+    for(var i = 0; i < dbot.config.notifier.watches.length; i++) {
+        console.log(JSON.stringify(dbot.config.notifier.watches[i]));
+        var thing = dbot.config.notifier.watches[i];
         console.log('Watching: ' + thing.endpoint);
         thing.item_cache = [];
         watchers.push(thing);
@@ -108,12 +131,15 @@ var notifier = function(dbot) {
 
     var commands = {
         '~checknow': function(event) {
-            checkItems(watchers[0], true);
+            for(var i = 0; i < watchers.length; i++) {
+                checkItems(watchers[i], true);
+            }
         },
         '~forcenew': function(event) {
             for(var i = 0; i < watchers.length; i++) {
-                watchers[i].item_cache.length = watchers[i].item_cache.length-1;
-                console.log(watchers[i].item_cache.length);
+                if(watchers[i].item_cache.length > 0) {
+                    watchers[i].item_cache.length = watchers[i].item_cache.length-1;
+                }
             }
         }
     };
