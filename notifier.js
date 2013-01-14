@@ -12,7 +12,11 @@ var notifier = function(dbot) {
                 return (db.AppID == data.AppID) && (db.LastUpdated < data.LastUpdated);
             },
             'parse': function(body) {
-                return JSON.parse(body);
+                try {
+                    return JSON.parse(body);
+                } catch(e) {
+                    return undefined;
+                }
             },
             'printable': function(data) {
                 return data.Name + ' (' + data.AppID + ', ' + data.AppType +')';
