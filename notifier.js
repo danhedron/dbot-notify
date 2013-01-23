@@ -90,26 +90,27 @@ var notifier = function(dbot) {
             }
         },
         function(error, response, body) {
-            var data = handler.parse(body); 
+            var data = handler.parse(body);
             if(Array.isArray(data)) {
                 if( thing.item_cache.length == 0 ) {
                     announce(thing, 'Built initial cache with ' + data.length + ' items');
                     process_data(thing,data);
-                }  
-                else if( res.updated.length > 0 || res.added.length > 0 ) {
-                    var res = process_data(thing, data);
+                }
+                
+                var res = process_data(thing, data);
+                if( res.updated.length > 0 || res.added.length > 0 ) {
                     var output = '';
-                    if( res.updated.length > 0 ) {
-                        output += res.updated.length;
-                        output += ' updated: ';
-                        output += res.updated.join(', ');
-                    }
-                    if( res.added.length > 0 ) {
-                        output += ( output.length > 0 ? ' ' : '' ) + res.added.length;
-                        output += ' added: ';
-                        output += res.added.join(', ');
-                    }
-                    announce(thing, output);
+	                if( res.updated.length > 0 ) {
+	                    output += res.updated.length;
+	                    output += ' updated: ';
+	                    output += res.updated.join(', ');
+	                }
+	                if( res.added.length > 0 ) {
+	                    output += ( output.length > 0 ? ' ' : '' ) + res.added.length;
+	                    output += ' added: ';
+	                    output += res.added.join(', ');
+	                }
+	                announce(thing, output);
                 }
                 else if(no_changes) {
                     announce(thing, 'No new items (' + data.length + ' items)');
