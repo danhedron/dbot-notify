@@ -96,24 +96,25 @@ var notifier = function(dbot) {
                     announce(thing, 'Built initial cache with ' + data.length + ' items');
                     process_data(thing,data);
                 }
-                
-                var res = process_data(thing, data);
-                if( res.updated.length > 0 || res.added.length > 0 ) {
-                    var output = '';
-	                if( res.updated.length > 0 ) {
-	                    output += res.updated.length;
-	                    output += ' updated: ';
-	                    output += res.updated.join(', ');
-	                }
-	                if( res.added.length > 0 ) {
-	                    output += ( output.length > 0 ? ' ' : '' ) + res.added.length;
-	                    output += ' added: ';
-	                    output += res.added.join(', ');
-	                }
-	                announce(thing, output);
-                }
-                else if(no_changes) {
-                    announce(thing, 'No new items (' + data.length + ' items)');
+                else {
+                    var res = process_data(thing, data);
+                    if( res.updated.length > 0 || res.added.length > 0 ) {
+                        var output = '';
+                        if( res.updated.length > 0 ) {
+                            output += res.updated.length;
+                            output += ' updated: ';
+                            output += res.updated.join(', ');
+                        }
+                        if( res.added.length > 0 ) {
+                            output += ( output.length > 0 ? ' ' : '' ) + res.added.length;
+                            output += ' added: ';
+                            output += res.added.join(', ');
+                        }
+                        announce(thing, output);
+                    }
+                    else if(no_changes) {
+                        announce(thing, 'No new items (' + data.length + ' items)');
+                    }
                 }
             }
             else {
