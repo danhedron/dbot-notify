@@ -96,7 +96,7 @@ var notifier = function(dbot) {
                     announce(thing, 'Built initial cache with ' + data.length + ' items');
                     process_data(thing,data);
                 }  
-                else if( thing.item_cache.length < data.length ) {
+                else if( res.updated.length > 0 || res.added.length > 0 ) {
                     var res = process_data(thing, data);
                     var output = '';
                     if( res.updated.length > 0 ) {
@@ -105,7 +105,7 @@ var notifier = function(dbot) {
                         output += res.updated.join(', ');
                     }
                     if( res.added.length > 0 ) {
-                        output += res.added.length;
+                        output += ( output.length > 0 ? ' ' : '' ) + res.added.length;
                         output += ' added: ';
                         output += res.added.join(', ');
                     }
@@ -116,7 +116,7 @@ var notifier = function(dbot) {
                 }
             }
             else {
-                announce(thing, 'Malformed response');
+                announce(thing, 'Malformed response for ' + endpoint);
             }
         });
     }
