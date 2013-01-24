@@ -100,7 +100,7 @@ var notifier = function(dbot) {
         var ua = dbot.config.name + ' BOT notify module';
         request.get({ 'url': endpoint, 'headers': _.defaults(thing.headers, { 'User-Agent': ua }) },
         function(error, response, body) {
-            var data = handler.parse(body); 
+            var data = handler.parse(body);
             if(Array.isArray(data)) {
                 if( thing.item_cache.length == 0 ) {
                     announce(thing, 'Built initial cache with ' + data.length + ' items');
