@@ -14,7 +14,7 @@ var notifier = function(dbot) {
             },
             'parse': function(body) {
                 try {
-                    return JSON.parse(body);
+                    return JSON.parse(body).data;
                 } catch(e) {
                     return undefined;
                 }
