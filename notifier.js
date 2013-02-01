@@ -20,7 +20,7 @@ var notifier = function(dbot) {
                 }
             },
             'printable': function(data) {
-                return data.Name + ' (' + data.AppID + ', ' + data.AppType +')';
+                return data.Name + ' (http://cdr.xpaw.ru/app/' + data.AppID + '/#section_history', ' + data.AppType +')';
             }
         },
         'repo': {
