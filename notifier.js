@@ -88,7 +88,8 @@ var notifier = function(dbot) {
             }
 
             if(found === false) {
-                removed.push(thing.item_cache[x]);
+                removed.push(handler.printable(thing.item_cache[x]));
+                thing.item_cache.splice(x, 1);
             }
         }
         return { 'updated': updated, 'added': added, 'removed': removed };
@@ -120,7 +121,7 @@ var notifier = function(dbot) {
                         units++;
                     }
                     if( res.removed.length > 0 ) {
-                        announce(thing, res.removed.length + ' added: ' 
+                        announce(thing, res.removed.length + ' removed: ' 
                                   + res.removed.join(', ') );
                         units++;
                     }
