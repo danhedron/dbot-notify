@@ -2,10 +2,26 @@
     "watches": [
         {
             "type": "cdr",
-            "endpoint":"http://cdr.xpaw.ru/linux/?raw=1",
+            "endpoint":"http://steamdb.info/api/GetLinuxApps/",
+	    "headers": {
+		  "Host": "steamdb.info"
+	    },
             "servers": {
                 "freenode": [
-                    "#oaosidl"
+                                        "#steamdb"
+                ]
+            },
+            "refresh": 60000
+        },
+        {
+            "type": "repo",
+            "endpoint":"http://repo.steampowered.com/steam/archive/precise/",
+	    "headers": {
+		    "Host": "repo.steampowered.com"
+	    },
+            "servers": {
+                "freenode": [
+                                        "#steamdb"
                 ]
             },
             "refresh": 60000
