@@ -20,7 +20,7 @@ var notifier = function(dbot) {
                 }
             },
             'printable': function(data, thing) {
-                return data.Name + ' ( http://steamdb.info/app/' + data.AppID + '/#section_history ' + data.AppType +')';
+                return data.Name + ' [ http://steamdb.info/app/' + data.AppID + '/#section_history ' + data.AppType +' ]';
             }
         },
         'repo': {
