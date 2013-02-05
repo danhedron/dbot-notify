@@ -19,8 +19,8 @@ var notifier = function(dbot) {
                     return undefined;
                 }
             },
-            'printable': function(data) {
-                return data.Name + ' (http://cdr.xpaw.ru/app/' + data.AppID + '/#section_history ' + data.AppType +')';
+            'printable': function(data, thing) {
+                return data.Name + ' ( http://steamdb.info/app/' + data.AppID + '/#section_history ' + data.AppType +')';
             }
         },
         'repo': {
