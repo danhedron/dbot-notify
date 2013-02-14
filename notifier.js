@@ -10,7 +10,19 @@ var notifier = function(dbot) {
                 return a.AppID == b.AppID;
             },
             'is_update': function(db, data) {
-                return (db.AppID == data.AppID) && (db.LastUpdated < data.LastUpdated);
+                if( db.AppID != data.AppID ) { // danharibo pls
+                    return false;
+                }
+                
+                if( ( db.LastUpdated < data.LastUpdated )
+            //	||  ( !db.PriceDiscount && data.PriceDiscount ) // these
+            //	||  ( db.PriceDiscount && !data.PriceDiscount ) // two shouldn't be required, but will see
+                ||  ( db.PriceDiscount != data.PriceDiscount )
+                ) {
+                    return true;
+                }
+                
+                return false;
             },
             'parse': function(body) {
                 try {
