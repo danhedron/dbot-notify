@@ -7,22 +7,10 @@ var notifier = function(dbot) {
     var protocols = {
         'cdr': {
             'are_equal': function(a, b) {
-                return a.AppID == b.AppID;
+                return a.AppID === b.AppID;
             },
             'is_update': function(db, data) {
-                if( db.AppID != data.AppID ) { // danharibo pls
-                    return false;
-                }
-                
-                if( ( db.LastUpdated < data.LastUpdated )
-            //	||  ( !db.PriceDiscount && data.PriceDiscount ) // these
-            //	||  ( db.PriceDiscount && !data.PriceDiscount ) // two shouldn't be required, but will see
-                ||  ( db.PriceDiscount != data.PriceDiscount )
-                ) {
-                    return true;
-                }
-                
-                return false;
+                return db.LastUpdated !== data.LastUpdated || db.PriceDiscount !== data.PriceDiscount;
             },
             'parse': function(body) {
                 try {
@@ -31,15 +19,16 @@ var notifier = function(dbot) {
                     return undefined;
                 }
             },
-            'printable': function(data, thing) {
-                return data.Name + ' [ http://steamdb.info/app/' + data.AppID + '/#section_history ' + data.AppType + ' ' + ( data.PriceDiscount ? ( ' -' + data.PriceDiscount + '% ' ) : '' ) + ']'; 
+            'printable': function(data) {
+                return data.Name + ' [ http://steamdb.info/app/' + data.AppID + '/#section_history ' + data.AppType + ' ' + ( data.PriceDiscount ? ( '-' + data.PriceDiscount + '% ' ) : '' ) + ']'; 
             }
         },
         'repo': {
             'are_equal': function(a, b) {
-                return a.Name == b.Name;
+                return a.Name === b.Name;
             },
             'is_update': function(db, data) {
+                return false;
             },
             'parse': function(body) {
                 var dom = jsdom.jsdom(body, null, null);
@@ -54,7 +43,7 @@ var notifier = function(dbot) {
                 return data.Name;
             }
         }
-    }
+    };
 
     var announce = function(thing, msg) {
         var servers = thing.servers;
@@ -66,16 +55,20 @@ var notifier = function(dbot) {
                 }
             }
         }
-    }
+    };
 
     function process_data(thing, data) {
-        var updated = []; var added = []; var removed = [];
-        var handler = protocols[thing.type];
+        var updated = [],
+            added = [],
+            removed = [],
+            handler = protocols[thing.type],
+            found = false,
+            x = 0, y = 0;
 
         // Process the new data-set to see if there's anything new.
-        for(var x = 0; x < data.length; x++) {
-            var found = false;
-            for(var y = 0; y < thing.item_cache.length; y++) {
+        for(x = 0; x < data.length; x++) {
+            found = false;
+            for(y = 0; y < thing.item_cache.length; y++) {
                 if(handler.are_equal(thing.item_cache[y], data[x])) {
                     found = true;
                     if(handler.is_update(thing.item_cache[y], data[x])) {
@@ -91,9 +84,9 @@ var notifier = function(dbot) {
             }
         }
 
-        for(var x = 0; x < thing.item_cache.length; x++) {
-            var found = false;
-            for(var y = 0; y < data.length; y++) {
+        for(x = 0; x < thing.item_cache.length; x++) {
+            found = false;
+            for(y = 0; y < data.length; y++) {
                 if(handler.are_equal(data[y], thing.item_cache[x])) {
                     found = true;
                 }
@@ -115,7 +108,9 @@ var notifier = function(dbot) {
         function(error, response, body) {
             var data = handler.parse(body);
             if(Array.isArray(data)) {
-                if( thing.item_cache.length == 0 ) {
+                thing.malformed_response = false;
+
+                if( thing.item_cache.length === 0 ) {
                     announce(thing, 'Built initial cache with ' + data.length + ' items');
                     process_data(thing, data);
                 }  
@@ -137,13 +132,15 @@ var notifier = function(dbot) {
                                   + res.removed.join(', ') );
                         units++;
                     }
-                    if(units == 0 && no_changes) {
+                    if(units === 0 && no_changes) {
                         announce(thing, 'No new items (' + data.length + ' items)');
                     }
                 }
             }
-            else {
-                announce(thing, 'Malformed response (from ' + thing.endpoint + ')');
+            else if( thing.malformed_response === false ) {
+                thing.malformed_response = true;
+
+                announce(thing, 'Malformed response - ' + thing.endpoint);
             }
         });
     }
@@ -152,6 +149,7 @@ var notifier = function(dbot) {
     dbot.config.notifier.watches.forEach(function(watch) {
         watchers.push(watch);
         watch.item_cache = [];
+        watch.malformed_response = false;
         watch = _.defaults(watch, { 
             'headers': [],
             'refresh': 60000  
