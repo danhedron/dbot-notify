@@ -20,7 +20,7 @@ var notifier = function(dbot) {
                 }
             },
             'printable': function(data) {
-                return data.Name + ' [\u0000http://steamdb.info/app/' + data.AppID + '/#section_history ' + data.AppType + ( data.PriceDiscount ? ( ' -' + data.PriceDiscount + '%' ) : '' ) + ']'; 
+                return data.Name + ' [\x0fhttp://steamdb.info/app/' + data.AppID + '/#section_history ' + data.AppType + ( data.PriceDiscount ? ( ' -' + data.PriceDiscount + '%' ) : '' ) + ']'; 
             }
         },
         'repo': {
