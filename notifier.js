@@ -84,7 +84,9 @@ var notifier = function(dbot) {
             }
         }
 
-        for(x = 0; x < thing.item_cache.length; x++) {
+        x = thing.item_cache.length;
+
+        while(x--) {
             found = false;
             for(y = 0; y < data.length; y++) {
                 if(handler.are_equal(data[y], thing.item_cache[x])) {
