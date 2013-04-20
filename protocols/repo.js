@@ -1,3 +1,5 @@
+var jsdom = require('jsdom');
+
 exports.are_equal = function(a, b) {
 	return a.Name === b.Name;
 }
