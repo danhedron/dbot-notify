@@ -147,8 +147,8 @@ var notifier = function(dbot) {
 			  'announce_updated': true,
 			  'announce_removed': true,
 			  'added_str': 'New',
-			  'updated_str': 'Updated'
-			  'removed_str': 'Removed',
+			  'updated_str': 'Updated',
+			  'removed_str': 'Removed'
 		});
 		dbot.api.timers.addTimer(watch.refresh, function() {
 			poll(watch);
