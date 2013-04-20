@@ -9,7 +9,7 @@ exports.parse = function(body, callback) {
 	var hrefs = dom.querySelectorAll('a[href$=deb]');
 	var items = [];
 	for(var i = 0; i < hrefs.length; i++) {
-		items.push( { exports.Name = hrefs[i].getAttribute('href') } );
+		items.push( { 'Name': hrefs[i].getAttribute('href') } );
 	}
 	callback(items);
 }
