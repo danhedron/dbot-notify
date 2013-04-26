@@ -13,7 +13,7 @@ exports.parse = function(body, callback) {
 		result.forEach(function(e){
 			e.guid = e.guid['#'];
 			e.pubDate = e.pubDate['#'];
-			e.link = e.link['#'];
+			e.link = e.link;
 			if(e.link.indexOf('#') != -1) {
 				e.link = e.link.substr(0, e.link.indexOf('#'));
 			}
