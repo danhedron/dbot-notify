@@ -129,9 +129,15 @@ var notifier = function(dbot) {
 		
 		request.get({ 'url': endpoint, 'headers': _.defaults(watcher.headers, { 'User-Agent': ua }) },
 				function(error, response, body) {
-					handler.parse(body, function(data) {
-						process(watcher, no_changes, data);
-					});
+					try {
+					    handler.parse(body, function(data) {
+						    process(watcher, no_changes, data);
+					    });
+					}
+                    catch(e) {
+                        console.log('Error Parsing ' + endpoint);
+                        console.log(e);
+                    }
 				});
 	}
 
