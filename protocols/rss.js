@@ -23,5 +23,5 @@ exports.parse = function(body, callback) {
 }
 
 exports.printable = function(data) {
-	return data.title + ' [\x0f'+data.link+']';
+	return data.title + ' [\x0f'+data.link+'\x0f]';
 }
