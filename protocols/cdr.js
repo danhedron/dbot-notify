@@ -11,5 +11,5 @@ exports.parse = function(body, callback) {
 	}
 }
 exports.printable = function(data) {
-	return data.Name + ' [\x0fhttp://steamdb.info/app/' + data.AppID + '/#section_history' + ( data.PriceDiscount ? ( ' -' + data.PriceDiscount + '%' ) : '' ) + '\x0f]'; 
+	return data.Name + ' [\x0fhttp://steamdb.info/app/' + data.AppID + '/#section_history' + ( data.PriceDiscount ? ( ' -' + data.PriceDiscount + '%' ) : '\x0f' ) + ']'; 
 };
