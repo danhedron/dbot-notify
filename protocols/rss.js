@@ -1,27 +1,29 @@
-var parse = require('libxml-to-js');
+var parse = require('libxml-to-js'),
+    request = require('request');
 
-exports.are_equal = function(a, b) {
-	return a.guid == b.guid;
-};
-
-exports.is_update = function(old, newer) {
-	return old.pubDate != newer.pubDate;
-};
-
-exports.parse = function(body, callback) {
-	parse(body,'/rss/channel/item',function(err, result){
-		result.forEach(function(e){
-			e.guid = e.guid['#'];
-			e.pubDate = e.pubDate['#'];
-			e.link = e.link;
-			if(e.link.indexOf('#') != -1) {
-				e.link = e.link.substr(0, e.link.indexOf('#'));
-			}
-		});
-		callback(result);
-	});
+exports.poll = function(endpoint, options, Entry, callback)
+{
+  request.get({ 'url': endpoint, 'headers': _.defaults(watcher.headers, { 'User-Agent': ua }) },
+              function(error, response, body) {
+                if(error) {
+                  callback(error);
+                  return;
+                }
+                parse(body,'/rss/channel/item',function(err, result){
+                  var entries = [];
+                  result.forEach(function(e) {
+                    if(e.link.indexOf('#') != -1) {
+                      e.link = e.link.substr(0, e.link.indexOf('#'));
+                    }
+                    entries.push(
+                      new Entry(
+                        e.guid['#'],
+                        e.title + ' [\x0f'+data.link+'\x0f]',
+                        (new Date(e.pubDate['#']).getTime()/1000)
+                        ));
+                  });
+                  callback(false, entries);
+                });
+              });
 }
 
-exports.printable = function(data) {
-	return data.title + ' [\x0f'+data.link+'\x0f]';
-}
