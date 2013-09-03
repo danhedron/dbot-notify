@@ -3,7 +3,7 @@ var parse = require('libxml-to-js'),
 
 exports.poll = function(endpoint, options, Entry, callback)
 {
-  request.get({ 'url': endpoint, 'headers': _.defaults(watcher.headers, { 'User-Agent': ua }) },
+  request.get({ 'url': endpoint, 'headers': options.headers) },
               function(error, response, body) {
                 if(error) {
                   callback(error);

@@ -40,11 +40,11 @@ function Announcement(Channel, Server, Events)
   this.announce = function(dbot)
   {
     if(announce_queue.added.length > 0) {
-      dbot.send(Server, Channel, "Added: " + announce_queue.added.join(', '));
+      dbot.say(Server, Channel, "Added: " + announce_queue.added.join(', '));
       announce_queue.added.length = 0;
     }
     if(announce_queue.updated.length > 0) {
-      dbot.send(Server, Channel, "Updated: " + announce_queue.updated.join(', '));
+      dbot.say(Server, Channel, "Updated: " + announce_queue.updated.join(', '));
       announce_queue.updated.length = 0;
     }
   }
@@ -71,7 +71,7 @@ function Reminder(Channel, Server, Time)
   this.remind = function(dbot)
   {
     if(remind_queue.length > 0) {
-      dbot.send(Server, Channel, "Only " + this.time + " seconds left until: " + remind_queue.join(', '));
+      dbot.say(Server, Channel, "Only " + this.time + " seconds left until: " + remind_queue.join(', '));
       remind_queue.length = 0;
     }
   }

@@ -6,13 +6,13 @@ var _ = require('underscore')._,
 
 var notifier = function(dbot) {
   var feeds = [];
-  dbot.config.notify.feeds.forEach(function(feed) {
+  dbot.config.modules.notify.feeds.forEach(function(feed) {
     var f = new Feed(
       dbot,
       feed.name,
       feed.protocol,
       feed.endpoint,
-      feed.interval,
+      feed.interval*1000,
       feed.options
       );
 
@@ -40,7 +40,8 @@ var notifier = function(dbot) {
 
     feeds.push(f);
 
-    dbot.api.timers.addTimer(watch.refresh, function() {
+    dbot.api.timers.addTimer(f.interval, function() {
+      console.log("Polling " + f.name + " [ " + f.endpoint + " ]");
       f.poll(false);
     });
   });
