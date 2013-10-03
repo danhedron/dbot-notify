@@ -10,11 +10,22 @@ function Entry(ID, Title, Timestamp)
   }
 }
 
-function Announcement(Channel, Server, Events)
+function Announcement(Channel, Server, Events, Strings)
 {
   this.channel = Channel;
   this.server = Server;
   this.events = Events;
+
+  this.added_str = "Added: ";
+  this.updated_str = "Updated: ";
+  if(Strings) {
+    if(Strings.added) {
+      this.added_str = Strings.added;
+    }
+    if(Strings.updated) {
+      this.updated_str =  Strings.updated;
+    }
+  }
 
   this.announce_updated = (this.events.indexOf("updated") != -1);
   this.announce_added = (this.events.indexOf("added") != -1);
@@ -40,11 +51,11 @@ function Announcement(Channel, Server, Events)
   this.announce = function(dbot)
   {
     if(announce_queue.added.length > 0) {
-      dbot.say(Server, Channel, "Added: " + announce_queue.added.join(', '));
+      dbot.say(Server, Channel, this.added_str + announce_queue.added.join(', '));
       announce_queue.added.length = 0;
     }
     if(announce_queue.updated.length > 0) {
-      dbot.say(Server, Channel, "Updated: " + announce_queue.updated.join(', '));
+      dbot.say(Server, Channel, this.updated_str + announce_queue.updated.join(', '));
       announce_queue.updated.length = 0;
     }
   }
@@ -68,10 +79,35 @@ function Reminder(Channel, Server, Time)
     return false;
   }
 
+  function prettyPrintDuration(duration)
+  {
+    if(duration > 60*60*24*365) {
+      return Math.round(duration / 60*60*24*365) + " years";
+    }
+    if(duration > 60*60*24*30) {
+      return Math.round(duration / 60*60*24*30) + " months";
+    }
+    if(duration > 60*60*24*7) {
+      return Math.round(duration / 60*60*24*7) + " weeks";
+    }
+    if(duration > 60*60*24) {
+      return Math.round(duration / 60*60*24) + " days";
+    }
+    if(duration > 60*60) {
+      return Math.round(duration / 60*60) + " hours";
+    }
+    if(duration > 60) {
+      return Math.round(duration / 60) + " minutes";
+    }
+    else {
+      return duration + " seconds";
+    }
+  }
+
   this.remind = function(dbot)
   {
     if(remind_queue.length > 0) {
-      dbot.say(Server, Channel, "Only " + this.time + " seconds left until: " + remind_queue.join(', '));
+      dbot.say(Server, Channel, "Only " + prettyPrintDuration(this.time) + " left until: " + remind_queue.join(', '));
       remind_queue.length = 0;
     }
   }
@@ -83,7 +119,7 @@ function Feed(dbot, Name, Protocol, Endpoint, Interval, Options)
   this.protocol = Protocol;
   this.endpoint = Endpoint;
   this.interval = Interval;
-  this.options = Options;
+  this.options = Options || {};
 
   // Load the protocol backend
   var backend = require('./protocols/'+this.protocol);

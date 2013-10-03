@@ -21,7 +21,8 @@ var notifier = function(dbot) {
         var a = new Announcement(
           announce.channel,
           announce.server,
-          announce.events
+          announce.events,
+          announce.strings
           );
         f.announcements.push(a);
       });

@@ -13,27 +13,27 @@ function TEST(dbot)
 
   for(var f = 0; f < feeds.length; ++f) {
     feeds[f].announcements.push(new Announcement("#oaosil", "aberwiki", ["added", "updated"]));
-    feeds[f].reminders.push(new Reminder("#oaosil", "aberwiki", 5));
+    feeds[f].reminders.push(new Reminder("#oaosil", "aberwiki", 500));
 
     feeds[f].now = function() { return 0; }
 
     feeds[f].processEntries([
-                            new Entry("ID-1", "PSA: Owls", 10),
-                            new Entry("ID-2", "PSA: Not Owls", 12)
+                            new Entry("ID-1", "PSA: Owls", 510),
+                            new Entry("ID-2", "PSA: Not Owls", 512)
                             ]);
     feeds[f].processEntries([
-                            new Entry("ID-1", "PSA: Owls", 14),
-                            new Entry("ID-2", "PSA: Not Owls", 12)
+                            new Entry("ID-1", "PSA: Owls", 514),
+                            new Entry("ID-2", "PSA: Not Owls", 512)
                             ]);
-    feeds[f].now = function() { return 8; }
+    feeds[f].now = function() { return 13; }
     feeds[f].processEntries([
-                            new Entry("ID-1", "PSA: Owls", 14),
-                            new Entry("ID-2", "PSA: Not Owls", 12)
+                            new Entry("ID-1", "PSA: Owls", 514),
+                            new Entry("ID-2", "PSA: Not Owls", 512)
                             ]);
-    feeds[f].now = function() { return 10; }
+    feeds[f].now = function() { return 15; }
     feeds[f].processEntries([
-                            new Entry("ID-1", "PSA: Owls", 14),
-                            new Entry("ID-2", "PSA: Not Owls", 12)
+                            new Entry("ID-1", "PSA: Owls", 514),
+                            new Entry("ID-2", "PSA: Not Owls", 512)
                             ]);
   }
 
@@ -45,7 +45,7 @@ function TEST(dbot)
 }
 
 TEST({
-  "send": function(server, channel, message) {
+  "say": function(server, channel, message) {
     console.log(server, channel, message);
   }
 });
